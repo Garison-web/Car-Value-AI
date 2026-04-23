@@ -12,33 +12,53 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
+  <!-- SPLASH SCREEN -->
+  <div class="splash" id="splash">
+    <div class="splash-bg"></div>
+    <div class="splash-content">
+      <div class="splash-logo">
+        <div class="splash-ring"></div>
+        <div class="splash-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 13l2-5a3 3 0 0 1 2.8-2h8.4A3 3 0 0 1 19 8l2 5v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <circle cx="7.5" cy="15.5" r="1.3" fill="currentColor"/>
+            <circle cx="16.5" cy="15.5" r="1.3" fill="currentColor"/>
+          </svg>
+        </div>
+      </div>
+      <h1 class="splash-title">DriveValue</h1>
+      <p class="splash-tag">Instant AI Car Pricing</p>
+      <div class="splash-loader"><div class="sl-bar"></div></div>
+    </div>
+  </div>
+
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
   <div class="bg-orb orb-3"></div>
   <div class="bg-grid"></div>
 
   <div class="app">
-    <header class="header">
-      <div class="logo">
-        <div class="logo-mark">
+    <!-- App-style top bar (contextual title per screen) -->
+    <header class="appbar" id="appbar">
+      <button type="button" class="appbar-back" id="appbar-back" hidden aria-label="Back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="appbar-logo" id="appbar-logo">
+        <div class="logo-mark sm">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3 13l2-5a3 3 0 0 1 2.8-2h8.4A3 3 0 0 1 19 8l2 5v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
             <circle cx="7.5" cy="15.5" r="1.3" fill="currentColor"/>
             <circle cx="16.5" cy="15.5" r="1.3" fill="currentColor"/>
           </svg>
         </div>
-        <div class="logo-text">
-          <h1>DriveValue</h1>
-          <span>Instant Car Pricing</span>
+        <div class="appbar-title-wrap">
+          <h1 id="appbar-title">DriveValue</h1>
+          <span id="appbar-sub">Instant Car Pricing</span>
         </div>
       </div>
-      <div class="header-actions">
-        <button type="button" class="icon-btn" id="open-history" aria-label="History">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <span class="badge" id="history-count" hidden>0</span>
-        </button>
-        <div class="status-pill">
-          <span class="dot"></span> AI Live
+      <div class="appbar-actions">
+        <div class="status-pill compact">
+          <span class="dot"></span> Live
         </div>
       </div>
     </header>
@@ -279,8 +299,14 @@
       </div>
 
       <div class="actions">
-        <button class="btn-secondary" id="recalc">↻ Recalculate</button>
-        <button class="btn-primary" id="new-prediction">+ New Car</button>
+        <button class="btn-secondary" id="recalc">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 3v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          Recalculate
+        </button>
+        <button class="btn-primary" id="new-prediction">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+          New Car
+        </button>
       </div>
 
       <div class="disclaimer glass">
@@ -293,20 +319,77 @@
       <div class="section glass">
         <div class="section-head between">
           <div>
-            <h3>Prediction History</h3>
-            <p>Your last 20 valuations</p>
+            <h3>Recent Valuations</h3>
+            <p>Your last 20 predictions</p>
           </div>
-          <button type="button" class="btn-tiny" id="clear-history">Clear all</button>
+          <button type="button" class="btn-tiny" id="clear-history">Clear</button>
         </div>
         <div id="history-list" class="history-list"></div>
         <div id="history-empty" class="history-empty" hidden>
-          <div class="he-icon">📭</div>
+          <div class="he-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.6" opacity=".4"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </div>
           <h4>No predictions yet</h4>
           <p>Your past valuations will appear here automatically.</p>
+          <button type="button" class="btn-primary sm" id="he-cta">Get Started</button>
         </div>
       </div>
-      <button type="button" class="btn-primary" id="back-from-history">← Back</button>
     </section>
+
+    <!-- ABOUT SCREEN -->
+    <section id="about-screen" class="screen">
+      <div class="hero glass">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+          <div class="hero-tag">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            About DriveValue
+          </div>
+          <h2>Built on real<br/><span class="grad">Indian car data</span></h2>
+          <p>DriveValue uses a Random Forest ML model trained on 5,000+ Indian resale patterns to give you a fair market value in seconds.</p>
+        </div>
+      </div>
+
+      <div class="section glass">
+        <div class="section-head compact"><h3>How it works</h3></div>
+        <div class="info-list">
+          <div class="info-row"><div class="info-ico">🚗</div><div><b>Enter your car details</b><span>Brand, year, fuel, KM, ownership.</span></div></div>
+          <div class="info-row"><div class="info-ico">🤖</div><div><b>AI analyses 20+ factors</b><span>Depreciation, brand index, wear & tear.</span></div></div>
+          <div class="info-row"><div class="info-ico">📊</div><div><b>Get an instant estimate</b><span>With confidence score & price curves.</span></div></div>
+        </div>
+      </div>
+
+      <div class="section glass">
+        <div class="section-head compact"><h3>Model stats</h3></div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-num">94%</div><div class="stat-lbl">Accuracy (R²)</div></div>
+          <div class="stat-card"><div class="stat-num">5K+</div><div class="stat-lbl">Training rows</div></div>
+          <div class="stat-card"><div class="stat-num">~₹33k</div><div class="stat-lbl">Mean error</div></div>
+          <div class="stat-card"><div class="stat-num">20+</div><div class="stat-lbl">Brands</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM TAB NAV -->
+    <nav class="tabbar" id="tabbar">
+      <button type="button" class="tab" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-8 9 8v9a2 2 0 0 1-2 2h-4v-6h-6v6H5a2 2 0 0 1-2-2v-9z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <span>Home</span>
+      </button>
+      <button type="button" class="tab tab-fab" data-tab="new" id="tab-new">
+        <span class="fab">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <button type="button" class="tab" data-tab="history">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3v5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>History <em class="tab-badge" id="tab-history-badge" hidden>0</em></span>
+      </button>
+      <button type="button" class="tab" data-tab="about">
+        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.7"/><path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <span>About</span>
+      </button>
+    </nav>
 
     <div class="toast" id="toast"></div>
   </div>

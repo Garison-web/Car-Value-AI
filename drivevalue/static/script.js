@@ -24,12 +24,18 @@
   const rbLow = document.getElementById('rb-low');
   const rbHigh = document.getElementById('rb-high');
 
-  const openHistoryBtn = document.getElementById('open-history');
-  const backHistoryBtn = document.getElementById('back-from-history');
   const clearHistoryBtn = document.getElementById('clear-history');
   const historyList = document.getElementById('history-list');
   const historyEmpty = document.getElementById('history-empty');
-  const historyCountBadge = document.getElementById('history-count');
+  const historyCountBadge = document.getElementById('tab-history-badge');
+  const heCta = document.getElementById('he-cta');
+  const aboutScreen = document.getElementById('about-screen');
+  const tabbar = document.getElementById('tabbar');
+  const appbarBack = document.getElementById('appbar-back');
+  const appbarLogo = document.getElementById('appbar-logo');
+  const appbarTitle = document.getElementById('appbar-title');
+  const appbarSub = document.getElementById('appbar-sub');
+  const splash = document.getElementById('splash');
 
   const HISTORY_KEY = 'drivevalue_history_v1';
   const MAX_HISTORY = 20;
@@ -59,9 +65,28 @@
     });
   });
 
+  const APPBAR_TITLES = {
+    'form-screen':    { title: 'DriveValue',    sub: 'Instant Car Pricing', back: false, tab: 'home' },
+    'loading-screen': { title: 'Analyzing…',    sub: 'AI is at work',       back: false, tab: 'home' },
+    'result-screen':  { title: 'Your Estimate', sub: 'AI Valuation',        back: true,  tab: 'home' },
+    'history-screen': { title: 'History',       sub: 'Recent valuations',   back: false, tab: 'history' },
+    'about-screen':   { title: 'About',         sub: 'How DriveValue works',back: false, tab: 'about' },
+  };
+
   function showScreen(el) {
-    [formScreen, loadingScreen, resultScreen, historyScreen].forEach(s => s.classList.remove('active'));
+    [formScreen, loadingScreen, resultScreen, historyScreen, aboutScreen].forEach(s => s.classList.remove('active'));
     el.classList.add('active');
+    const meta = APPBAR_TITLES[el.id] || APPBAR_TITLES['form-screen'];
+    appbarTitle.textContent = meta.title;
+    appbarSub.textContent = meta.sub;
+    appbarBack.hidden = !meta.back;
+    appbarLogo.style.marginLeft = meta.back ? '0' : '';
+    // Hide tabbar on loading screen for focus
+    tabbar.style.display = (el.id === 'loading-screen') ? 'none' : '';
+    // Update active tab
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.tab === meta.tab);
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -479,11 +504,27 @@
   });
   newBtn.addEventListener('click', () => showScreen(formScreen));
 
-  openHistoryBtn.addEventListener('click', () => {
-    renderHistory();
-    showScreen(historyScreen);
+  // Tabbar nav
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      const t = tab.dataset.tab;
+      if (navigator.vibrate) navigator.vibrate(6);
+      if (t === 'home') showScreen(formScreen);
+      else if (t === 'history') { renderHistory(); showScreen(historyScreen); }
+      else if (t === 'about') showScreen(aboutScreen);
+      else if (t === 'new') showScreen(formScreen);
+    });
   });
-  backHistoryBtn.addEventListener('click', () => showScreen(formScreen));
+
+  // Appbar back button
+  appbarBack.addEventListener('click', () => {
+    if (resultScreen.classList.contains('active')) showScreen(formScreen);
+    else showScreen(formScreen);
+  });
+
+  // Empty-state CTA
+  if (heCta) heCta.addEventListener('click', () => showScreen(formScreen));
+
   clearHistoryBtn.addEventListener('click', () => {
     if (loadHistory().length === 0) return;
     localStorage.removeItem(HISTORY_KEY);
@@ -513,6 +554,10 @@
     }
   });
 
+  // Splash dismiss after animation
+  setTimeout(() => { if (splash) splash.classList.add('hide'); }, 2200);
+
   // Init
   updateHistoryBadge();
+  showScreen(formScreen);
 })();
