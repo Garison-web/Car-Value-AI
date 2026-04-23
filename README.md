@@ -26,14 +26,7 @@ Yeah… not anymore.
 **Car-Value-AI** uses Machine Learning to predict the **fair market value** of your car in seconds.
 No drama. No guesswork. Just data.
 
----
 
-## 🎬 Demo
-
-🚀 Live App:
-👉 https://your-app-link-here
-
----
 
 ## ⚙️ Features
 
