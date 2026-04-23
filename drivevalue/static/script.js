@@ -193,6 +193,19 @@
     animatePrice(data.price);
     renderRangeBar(data.range_low, data.price, data.range_high);
 
+    // Market verdict
+    if (data.verdict) {
+      const v = data.verdict;
+      const verdictEl = document.getElementById('verdict');
+      verdictEl.dataset.key = v.key;
+      document.getElementById('vd-icon').textContent = v.emoji;
+      document.getElementById('vd-label').textContent = v.label;
+      document.getElementById('vd-sub').textContent = v.sub;
+      // Re-trigger animation
+      verdictEl.style.animation = 'none';
+      requestAnimationFrame(() => { verdictEl.style.animation = ''; });
+    }
+
     const s = data.summary;
     summaryEl.innerHTML = `
       <div class="summary-item"><span class="k">Vehicle</span><span class="v">${s.brand} ${escapeHtml(s.model)}</span></div>

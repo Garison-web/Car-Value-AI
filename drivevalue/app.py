@@ -163,6 +163,44 @@ def build_response(payload: dict) -> dict:
     low = round_price(mean_price * 0.85)
     high = round_price(mean_price * 1.15)
 
+    # ───── Market verdict: compare to an "average" same-brand/year car ─────
+    baseline_payload = {
+        "brand": p["brand"], "model": p["model"], "year": p["year"],
+        "fuel": p["fuel"], "transmission": p["transmission"],
+        "km_driven": max(5000, age * 12000),  # typical Indian usage
+        "owner": "First",
+        "mileage": 18.0,
+        "engine": 1200,
+    }
+    try:
+        baseline_price, _ = _safe_predict(baseline_payload)
+    except Exception:
+        baseline_price = mean_price
+    baseline_price = max(35000.0, baseline_price)
+    ratio = mean_price / baseline_price if baseline_price > 0 else 1.0
+    diff_pct = round((ratio - 1.0) * 100)
+
+    if ratio >= 1.07:
+        verdict_key = "great"
+        verdict_label = "Great Deal"
+        verdict_sub = f"~{abs(diff_pct)}% above similar cars"
+        verdict_emoji = "🔥"
+    elif ratio >= 0.95:
+        verdict_key = "fair"
+        verdict_label = "Fair Market"
+        verdict_sub = "In line with similar cars"
+        verdict_emoji = "👍"
+    elif ratio >= 0.85:
+        verdict_key = "below"
+        verdict_label = "Below Market"
+        verdict_sub = f"~{abs(diff_pct)}% below similar cars"
+        verdict_emoji = "💡"
+    else:
+        verdict_key = "low"
+        verdict_label = "Underpriced"
+        verdict_sub = f"~{abs(diff_pct)}% below similar cars"
+        verdict_emoji = "⚠️"
+
     # Backward-compatible factors block for the existing frontend
     base = 600000.0
     depreciation = math.pow(0.88, age)
@@ -186,6 +224,15 @@ def build_response(payload: dict) -> dict:
         "range_formatted": f"{format_inr(low)} – {format_inr(high)}",
         "confidence": confidence,
         "confidence_label": "High" if confidence >= 88 else "Medium" if confidence >= 80 else "Fair",
+        "verdict": {
+            "key": verdict_key,
+            "label": verdict_label,
+            "sub": verdict_sub,
+            "emoji": verdict_emoji,
+            "diff_pct": diff_pct,
+            "baseline_price": round_price(baseline_price),
+            "baseline_formatted": format_inr(round_price(baseline_price)),
+        },
         "model_used": "RandomForestRegressor" if used_model else "heuristic",
         "model_metrics": MODEL_METRICS if used_model else None,
         "uncertainty_std": int(tree_std),
