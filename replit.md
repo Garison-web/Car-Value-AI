@@ -25,3 +25,13 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
 See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+
+## DriveValue (Flask app)
+
+Mobile-first AI car price prediction app at `drivevalue/`.
+- `drivevalue/app.py` — Flask backend with `/api/predict` endpoint and tuned depreciation model
+- `drivevalue/templates/index.html` — single-page mobile UI (form, loader, result screens)
+- `drivevalue/static/style.css` — dark theme + glassmorphism styling
+- `drivevalue/static/script.js` — form handling, loading animation, result rendering
+
+Run via the `DriveValue` workflow (`PORT=5000 python3 drivevalue/app.py`).

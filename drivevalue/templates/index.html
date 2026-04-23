@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a14" />
+  <title>DriveValue — AI Car Price Prediction</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app">
+    <header class="header glass">
+      <div class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 13l2-5a3 3 0 0 1 2.8-2h8.4A3 3 0 0 1 19 8l2 5v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-6z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <circle cx="7.5" cy="15.5" r="1.2" fill="currentColor"/>
+            <circle cx="16.5" cy="15.5" r="1.2" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <h1>DriveValue</h1>
+          <span>AI Price Intelligence</span>
+        </div>
+      </div>
+      <div class="status-pill">
+        <span class="dot"></span> Live
+      </div>
+    </header>
+
+    <!-- FORM SCREEN -->
+    <section id="form-screen" class="screen active">
+      <div class="hero glass">
+        <div class="hero-tag">Powered by AI</div>
+        <h2>Know your car's<br/><span class="grad">true market value</span></h2>
+        <p>Get an instant, intelligent estimate of your car's resale price based on real-world depreciation models.</p>
+      </div>
+
+      <form id="predict-form" class="card glass" autocomplete="off">
+        <div class="grid">
+          <label class="field">
+            <span>Brand</span>
+            <select name="brand" required>
+              <option value="">Select brand</option>
+              <option>Maruti</option><option>Hyundai</option><option>Honda</option>
+              <option>Toyota</option><option>Tata</option><option>Mahindra</option>
+              <option>Ford</option><option>Renault</option><option>Volkswagen</option>
+              <option>Skoda</option><option>BMW</option><option>Mercedes</option>
+              <option>Audi</option><option>Kia</option><option>Nissan</option>
+              <option>Chevrolet</option><option>Jeep</option><option>MG</option>
+              <option>Volvo</option><option>Lexus</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Model</span>
+            <input type="text" name="model" placeholder="e.g. Swift VXi" required />
+          </label>
+
+          <label class="field">
+            <span>Year</span>
+            <input type="number" name="year" min="1995" max="2026" placeholder="2020" required />
+          </label>
+
+          <label class="field">
+            <span>Fuel</span>
+            <select name="fuel" required>
+              <option value="">Select fuel</option>
+              <option>Petrol</option><option>Diesel</option><option>CNG</option>
+              <option>LPG</option><option>Electric</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Transmission</span>
+            <select name="transmission" required>
+              <option value="">Select</option>
+              <option>Manual</option><option>Automatic</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>KM Driven</span>
+            <input type="number" name="km_driven" min="0" max="500000" placeholder="45000" required />
+          </label>
+
+          <label class="field">
+            <span>Owner</span>
+            <select name="owner" required>
+              <option value="">Select</option>
+              <option>First</option><option>Second</option><option>Third</option>
+              <option>Fourth</option><option>Test Drive</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Mileage (km/l)</span>
+            <input type="number" step="0.1" name="mileage" min="2" max="50" placeholder="18.5" required />
+          </label>
+
+          <label class="field full">
+            <span>Engine (cc)</span>
+            <input type="number" name="engine" min="500" max="6000" placeholder="1197" required />
+          </label>
+        </div>
+
+        <button type="submit" class="cta">
+          <span class="cta-label">Predict Price</span>
+          <svg class="cta-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+
+      <p class="footnote">Estimates use a tuned depreciation model • Indian market data</p>
+    </section>
+
+    <!-- LOADING SCREEN -->
+    <section id="loading-screen" class="screen">
+      <div class="loader-wrap glass">
+        <div class="ring">
+          <div class="ring-core"></div>
+        </div>
+        <h3>Analyzing your car</h3>
+        <p class="loader-step" id="loader-step">Reading vehicle profile…</p>
+        <div class="progress"><div class="progress-bar" id="progress-bar"></div></div>
+      </div>
+    </section>
+
+    <!-- RESULT SCREEN -->
+    <section id="result-screen" class="screen">
+      <div class="result-card glass">
+        <div class="result-tag">Estimated Value</div>
+        <div class="price" id="price">₹0</div>
+        <div class="range" id="range">Range: —</div>
+
+        <div class="vehicle-summary" id="vehicle-summary"></div>
+
+        <div class="metrics" id="metrics"></div>
+
+        <div class="actions">
+          <button class="btn-secondary" id="recalc">Recalculate</button>
+          <button class="btn-primary" id="new-prediction">New Prediction</button>
+        </div>
+      </div>
+
+      <div class="disclaimer glass">
+        <strong>Note:</strong> This is an AI-generated estimate. Actual market price may vary based on condition, location, and demand.
+      </div>
+    </section>
+
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
