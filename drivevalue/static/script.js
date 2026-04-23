@@ -554,6 +554,45 @@
     }
   });
 
+  // Brand grid → select
+  const brandSelect = form.querySelector('select[name="brand"]');
+  document.querySelectorAll('.brand-tile').forEach(tile => {
+    tile.addEventListener('click', () => {
+      const brand = tile.dataset.brand;
+      document.querySelectorAll('.brand-tile').forEach(t => t.classList.remove('selected'));
+      tile.classList.add('selected');
+      if (brandSelect) brandSelect.value = brand;
+      if (navigator.vibrate) navigator.vibrate(8);
+      // Smooth scroll to form
+      const target = document.querySelector('.section');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+  // Sync grid when select changes
+  if (brandSelect) {
+    brandSelect.addEventListener('change', () => {
+      document.querySelectorAll('.brand-tile').forEach(t => {
+        t.classList.toggle('selected', t.dataset.brand === brandSelect.value);
+      });
+    });
+  }
+
+  // Share button on result
+  const shareBtn = document.getElementById('rh-share');
+  if (shareBtn) shareBtn.addEventListener('click', async () => {
+    const priceText = priceEl.textContent;
+    const rangeText = rangeEl.textContent;
+    const text = `My car's estimated value on DriveValue: ${priceText}\n${rangeText}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: 'DriveValue Estimate', text });
+      } else {
+        await navigator.clipboard.writeText(text);
+        showToast('Copied to clipboard');
+      }
+    } catch {}
+  });
+
   // Splash dismiss after animation
   setTimeout(() => { if (splash) splash.classList.add('hide'); }, 2200);
 

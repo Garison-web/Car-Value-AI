@@ -65,20 +65,72 @@
 
     <!-- FORM SCREEN -->
     <section id="form-screen" class="screen active">
-      <div class="hero glass">
-        <div class="hero-bg"></div>
-        <div class="hero-content">
-          <div class="hero-tag">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.39 7.36H22l-6.19 4.5L18.2 21 12 16.5 5.8 21l2.39-7.14L2 9.36h7.61L12 2z" fill="currentColor"/></svg>
-            India's smartest price engine
+      <!-- Premium hero card -->
+      <div class="hero-pro glass">
+        <div class="hero-pro-bg"></div>
+        <div class="hero-pro-glow"></div>
+        <div class="hero-pro-content">
+          <div class="hero-tag pro">
+            <span class="pulse-dot"></span> Trusted by Indian car owners
           </div>
-          <h2>What's your car<br/><span class="grad">really worth?</span></h2>
-          <p>Get a fair, AI-backed market estimate in seconds — built on Indian resale patterns.</p>
-          <div class="trust-row">
-            <div class="trust-item"><span class="t-icon">⚡</span><span>10-sec quote</span></div>
-            <div class="trust-item"><span class="t-icon">🔒</span><span>100% free</span></div>
-            <div class="trust-item"><span class="t-icon">📊</span><span>Real data</span></div>
+          <h2 class="hero-h2">Sell smart.<br/><span class="grad">Know your car's value.</span></h2>
+          <p class="hero-p">Free AI-backed valuation in 10 seconds. Built on real Indian resale patterns.</p>
+          <div class="hero-stats">
+            <div class="hs-cell"><div class="hs-num">94<small>%</small></div><div class="hs-lbl">Accuracy</div></div>
+            <div class="hs-div"></div>
+            <div class="hs-cell"><div class="hs-num">10s</div><div class="hs-lbl">Quote</div></div>
+            <div class="hs-div"></div>
+            <div class="hs-cell"><div class="hs-num">5K+</div><div class="hs-lbl">Data points</div></div>
           </div>
+        </div>
+        <div class="hero-car">
+          <svg viewBox="0 0 240 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="carBody" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#7aa6ff"/>
+                <stop offset="1" stop-color="#3a5ec9"/>
+              </linearGradient>
+              <linearGradient id="carWindow" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#cfe2ff" stop-opacity=".95"/>
+                <stop offset="1" stop-color="#5b8cff" stop-opacity=".55"/>
+              </linearGradient>
+            </defs>
+            <ellipse cx="120" cy="100" rx="100" ry="6" fill="#000" opacity=".35"/>
+            <path d="M30 80c0-6 4-10 10-10l20-22c4-4 9-7 15-8l36-3c14-1 27 3 38 11l25 18 25 4c8 1 14 7 14 15v8c0 4-3 7-7 7H37c-4 0-7-3-7-7v-13z" fill="url(#carBody)"/>
+            <path d="M70 50l25-22c3-3 7-5 11-5l30-2c11-1 22 2 31 9l21 16-118 4z" fill="url(#carWindow)"/>
+            <path d="M118 27v45" stroke="#3a5ec9" stroke-width="1.5" opacity=".6"/>
+            <circle cx="68" cy="92" r="14" fill="#0a0a22"/><circle cx="68" cy="92" r="7" fill="#5b8cff"/>
+            <circle cx="178" cy="92" r="14" fill="#0a0a22"/><circle cx="178" cy="92" r="7" fill="#5b8cff"/>
+            <rect x="195" y="78" width="14" height="6" rx="2" fill="#ffe27a"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Trust strip -->
+      <div class="trust-strip">
+        <div class="ts-item"><div class="ts-ico">⚡</div><div><b>Instant</b><span>10s quote</span></div></div>
+        <div class="ts-item"><div class="ts-ico">🔒</div><div><b>Private</b><span>No signup</span></div></div>
+        <div class="ts-item"><div class="ts-ico">🇮🇳</div><div><b>India-first</b><span>Real data</span></div></div>
+      </div>
+
+      <!-- Popular brands -->
+      <div class="section glass brands-section">
+        <div class="section-head between compact">
+          <div>
+            <h3>Popular brands</h3>
+            <p>Tap to start with one</p>
+          </div>
+          <span class="chip-tag">20 brands</span>
+        </div>
+        <div class="brand-grid" id="brand-grid">
+          <button type="button" class="brand-tile" data-brand="Maruti"><span class="bt-logo" style="--c1:#3a5ec9;--c2:#5b8cff">M</span><span class="bt-name">Maruti</span></button>
+          <button type="button" class="brand-tile" data-brand="Hyundai"><span class="bt-logo" style="--c1:#0c4a6e;--c2:#0ea5e9">H</span><span class="bt-name">Hyundai</span></button>
+          <button type="button" class="brand-tile" data-brand="Honda"><span class="bt-logo" style="--c1:#7f1d1d;--c2:#ef4444">H</span><span class="bt-name">Honda</span></button>
+          <button type="button" class="brand-tile" data-brand="Toyota"><span class="bt-logo" style="--c1:#991b1b;--c2:#dc2626">T</span><span class="bt-name">Toyota</span></button>
+          <button type="button" class="brand-tile" data-brand="Tata"><span class="bt-logo" style="--c1:#1e3a8a;--c2:#3b82f6">T</span><span class="bt-name">Tata</span></button>
+          <button type="button" class="brand-tile" data-brand="Mahindra"><span class="bt-logo" style="--c1:#7c2d12;--c2:#ea580c">M</span><span class="bt-name">Mahindra</span></button>
+          <button type="button" class="brand-tile" data-brand="Kia"><span class="bt-logo" style="--c1:#111827;--c2:#374151">K</span><span class="bt-name">Kia</span></button>
+          <button type="button" class="brand-tile" data-brand="BMW"><span class="bt-logo" style="--c1:#1e3a8a;--c2:#0ea5e9">B</span><span class="bt-name">BMW</span></button>
         </div>
       </div>
 
@@ -233,12 +285,20 @@
 
     <!-- RESULT SCREEN -->
     <section id="result-screen" class="screen">
-      <div class="result-hero glass">
+      <div class="result-hero pro glass">
+        <div class="rh-bg-1"></div>
+        <div class="rh-bg-2"></div>
+        <div class="rh-grid"></div>
         <div class="result-shine"></div>
-        <div class="result-tag">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Estimated Market Value
+        <div class="rh-top">
+          <div class="result-tag pro">
+            <span class="pulse-dot green"></span> AI Verified Estimate
+          </div>
+          <div class="rh-share" id="rh-share" title="Share">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
         </div>
+        <div class="rh-label">Estimated Market Value</div>
         <div class="price" id="price">₹0</div>
         <div class="range" id="range">Range: —</div>
 
