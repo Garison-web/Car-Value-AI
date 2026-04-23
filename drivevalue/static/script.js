@@ -486,6 +486,7 @@
 
   function applyPayloadToForm(p) {
     form.querySelector('[name="brand"]').value = p.brand || '';
+    populateModels(p.brand, p.model);
     form.querySelector('[name="model"]').value = p.model || '';
     form.querySelector('[name="year"]').value = p.year || '';
     form.querySelector('[name="km_driven"]').value = p.km_driven || '';
@@ -567,6 +568,44 @@
     }
   });
 
+  // ───── Models by brand ─────
+  const MODELS_BY_BRAND = {
+    Maruti: ['Alto', 'Swift', 'Wagon R', 'Baleno', 'Dzire', 'Ertiga', 'Brezza', 'Ciaz', 'Celerio', 'S-Presso', 'Ignis', 'XL6', 'Grand Vitara', 'Fronx', 'Jimny'],
+    Hyundai: ['i10', 'i20', 'Grand i10 Nios', 'Aura', 'Verna', 'Creta', 'Venue', 'Alcazar', 'Tucson', 'Kona Electric', 'Exter'],
+    Honda: ['City', 'Amaze', 'Jazz', 'WR-V', 'Elevate', 'Civic', 'CR-V'],
+    Toyota: ['Innova Crysta', 'Innova Hycross', 'Fortuner', 'Glanza', 'Urban Cruiser', 'Hilux', 'Camry', 'Vellfire', 'Hyryder'],
+    Tata: ['Nexon', 'Punch', 'Tiago', 'Tigor', 'Altroz', 'Harrier', 'Safari', 'Curvv', 'Nexon EV', 'Tiago EV'],
+    Mahindra: ['Scorpio N', 'Scorpio Classic', 'XUV300', 'XUV400', 'XUV500', 'XUV700', 'Thar', 'Bolero', 'Marazzo', 'Alturas G4'],
+    Ford: ['EcoSport', 'Endeavour', 'Figo', 'Aspire', 'Freestyle', 'Mustang'],
+    Renault: ['Kwid', 'Triber', 'Kiger', 'Duster', 'Captur', 'Lodgy'],
+    Volkswagen: ['Polo', 'Vento', 'Virtus', 'Taigun', 'Tiguan', 'T-Roc'],
+    Skoda: ['Rapid', 'Slavia', 'Kushaq', 'Kodiaq', 'Octavia', 'Superb'],
+    BMW: ['3 Series', '5 Series', '7 Series', 'X1', 'X3', 'X5', 'X7', 'Z4', 'M340i'],
+    Mercedes: ['A-Class', 'C-Class', 'E-Class', 'S-Class', 'GLA', 'GLC', 'GLE', 'GLS', 'AMG GT'],
+    Audi: ['A3', 'A4', 'A6', 'A8', 'Q3', 'Q5', 'Q7', 'Q8', 'e-tron'],
+    Kia: ['Seltos', 'Sonet', 'Carens', 'Carnival', 'EV6'],
+    Nissan: ['Magnite', 'Kicks', 'Terrano', 'Sunny', 'Micra'],
+    Chevrolet: ['Beat', 'Cruze', 'Spark', 'Sail', 'Tavera', 'Captiva'],
+    Jeep: ['Compass', 'Meridian', 'Wrangler', 'Grand Cherokee'],
+    MG: ['Hector', 'Hector Plus', 'Astor', 'ZS EV', 'Gloster', 'Comet EV'],
+    Volvo: ['XC40', 'XC60', 'XC90', 'S60', 'S90', 'C40 Recharge'],
+    Lexus: ['ES', 'NX', 'RX', 'LX', 'LS', 'LC'],
+  };
+
+  const modelSelect = document.getElementById('model-select');
+  function populateModels(brand, preselect) {
+    const models = MODELS_BY_BRAND[brand] || [];
+    if (models.length === 0) {
+      modelSelect.innerHTML = '<option value="">Select brand first</option>';
+      modelSelect.disabled = true;
+      return;
+    }
+    modelSelect.disabled = false;
+    modelSelect.innerHTML = '<option value="">Choose model</option>' +
+      models.map(m => `<option value="${m}"${m === preselect ? ' selected' : ''}>${m}</option>`).join('') +
+      '<option value="Other">Other</option>';
+  }
+
   // Brand grid → select
   const brandSelect = form.querySelector('select[name="brand"]');
   document.querySelectorAll('.brand-tile').forEach(tile => {
@@ -575,18 +614,20 @@
       document.querySelectorAll('.brand-tile').forEach(t => t.classList.remove('selected'));
       tile.classList.add('selected');
       if (brandSelect) brandSelect.value = brand;
+      populateModels(brand);
       if (navigator.vibrate) navigator.vibrate(8);
       // Smooth scroll to form
       const target = document.querySelector('.section');
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
-  // Sync grid when select changes
+  // Sync grid + models when brand select changes
   if (brandSelect) {
     brandSelect.addEventListener('change', () => {
       document.querySelectorAll('.brand-tile').forEach(t => {
         t.classList.toggle('selected', t.dataset.brand === brandSelect.value);
       });
+      populateModels(brandSelect.value);
     });
   }
 
