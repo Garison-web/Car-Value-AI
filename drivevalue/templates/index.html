@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 </head>
 <body>
   <div class="bg-orb orb-1"></div>
@@ -31,8 +32,14 @@
           <span>Instant Car Pricing</span>
         </div>
       </div>
-      <div class="status-pill">
-        <span class="dot"></span> AI Live
+      <div class="header-actions">
+        <button type="button" class="icon-btn" id="open-history" aria-label="History">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7L3 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 3v5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span class="badge" id="history-count" hidden>0</span>
+        </button>
+        <div class="status-pill">
+          <span class="dot"></span> AI Live
+        </div>
       </div>
     </header>
 
@@ -215,12 +222,28 @@
         <div class="price" id="price">₹0</div>
         <div class="range" id="range">Range: —</div>
 
+        <!-- Range bar -->
+        <div class="range-bar">
+          <div class="rb-track">
+            <div class="rb-zone" id="rb-zone"></div>
+            <div class="rb-marker" id="rb-marker">
+              <div class="rb-pin"></div>
+            </div>
+          </div>
+          <div class="rb-labels">
+            <span id="rb-low">₹0</span>
+            <span id="rb-high">₹0</span>
+          </div>
+        </div>
+
+        <!-- Confidence -->
         <div class="confidence">
           <div class="conf-head">
             <span>AI Confidence</span>
             <span id="conf-score">High · 92%</span>
           </div>
           <div class="conf-bar"><div class="conf-fill" id="conf-fill"></div></div>
+          <div class="conf-meta" id="conf-meta">Based on Random Forest tree variance</div>
         </div>
       </div>
 
@@ -238,6 +261,23 @@
         <div class="metrics" id="metrics"></div>
       </div>
 
+      <!-- Charts -->
+      <div class="section glass chart-section">
+        <div class="section-head compact between">
+          <h3>Price vs Year</h3>
+          <span class="chip-tag">Same car, different year</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-year"></canvas></div>
+      </div>
+
+      <div class="section glass chart-section">
+        <div class="section-head compact between">
+          <h3>Price vs KM Driven</h3>
+          <span class="chip-tag">Wear curve</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chart-km"></canvas></div>
+      </div>
+
       <div class="actions">
         <button class="btn-secondary" id="recalc">↻ Recalculate</button>
         <button class="btn-primary" id="new-prediction">+ New Car</button>
@@ -246,6 +286,26 @@
       <div class="disclaimer glass">
         <strong>Heads up:</strong> This is an AI-generated estimate. Actual offers vary by city, condition, and demand.
       </div>
+    </section>
+
+    <!-- HISTORY SCREEN -->
+    <section id="history-screen" class="screen">
+      <div class="section glass">
+        <div class="section-head between">
+          <div>
+            <h3>Prediction History</h3>
+            <p>Your last 20 valuations</p>
+          </div>
+          <button type="button" class="btn-tiny" id="clear-history">Clear all</button>
+        </div>
+        <div id="history-list" class="history-list"></div>
+        <div id="history-empty" class="history-empty" hidden>
+          <div class="he-icon">📭</div>
+          <h4>No predictions yet</h4>
+          <p>Your past valuations will appear here automatically.</p>
+        </div>
+      </div>
+      <button type="button" class="btn-primary" id="back-from-history">← Back</button>
     </section>
 
     <div class="toast" id="toast"></div>

@@ -234,6 +234,46 @@ def predict():
     return _predict_view()
 
 
+@app.route("/api/curves", methods=["POST"])
+def api_curves():
+    """Return price-vs-year and price-vs-km curves for the given car."""
+    try:
+        data = request.get_json(force=True, silent=True) or {}
+        p = normalize_payload(data)
+
+        # Year curve: vary year from current_year-12 .. current_year
+        year_points = []
+        for y in range(CURRENT_YEAR - 12, CURRENT_YEAR + 1):
+            variant = dict(p, year=y)
+            mean_price, _ = _safe_predict(variant)
+            year_points.append({"year": y, "price": round_price(mean_price)})
+
+        # KM curve: 0 .. 200000 step 20000
+        km_points = []
+        for km in range(0, 200001, 20000):
+            variant = dict(p, km_driven=km)
+            mean_price, _ = _safe_predict(variant)
+            km_points.append({"km": km, "price": round_price(mean_price)})
+
+        return jsonify({"year_curve": year_points, "km_curve": km_points})
+    except (ValueError, TypeError) as e:
+        return jsonify({"error": f"Invalid input: {e}"}), 400
+
+
+def _safe_predict(p: dict) -> tuple[float, float]:
+    if MODEL is not None:
+        try:
+            return model_predict(p)
+        except Exception:
+            pass
+    price = heuristic_price({
+        "brand": p["brand"], "year": p["year"], "fuel": p["fuel"],
+        "transmission": p["transmission"], "km_driven": p["km_driven"],
+        "owner": p["owner"], "mileage": p["mileage"], "engine": p["engine"],
+    })
+    return price, price * 0.10
+
+
 @app.route("/healthz")
 def healthz():
     return {"ok": True, "model_loaded": MODEL is not None,
