@@ -163,14 +163,12 @@
       });
     });
 
-    // confidence — derive from km/age plausibility
-    let confidence = 92;
-    if (s.age > 12) confidence -= 8;
-    if (s.km_driven > 150000) confidence -= 6;
-    if (s.km_driven < 1000) confidence -= 4;
-    confidence = Math.max(72, Math.min(96, confidence));
-    const label = confidence >= 88 ? 'High' : confidence >= 80 ? 'Medium' : 'Fair';
-    confScore.textContent = `${label} · ${confidence}%`;
+    // confidence comes from the ML model's tree variance
+    const confidence = data.confidence ?? 90;
+    const label = data.confidence_label ||
+      (confidence >= 88 ? 'High' : confidence >= 80 ? 'Medium' : 'Fair');
+    const modelTag = data.model_used === 'RandomForestRegressor' ? ' · RF' : '';
+    confScore.textContent = `${label} · ${confidence}%${modelTag}`;
     requestAnimationFrame(() => { confFill.style.width = confidence + '%'; });
   }
 
